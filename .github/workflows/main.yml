@@ -47,7 +47,17 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ec2-user/alta
+
+            if docker ps -a --format '{{.Names}}' | grep -Eq '^alta-ci-cd$'; then
+              echo "Container alta-ci-cd already exists."
+              docker stop alta-ci-cd
+              docker rm alta-ci-cd
+            else
+              echo "Container alta-ci-cd does not exist."
+            fi
+            
             docker pull mhmmdrizki/alta-ci-cd:latest
+            
             docker run -itd --name alta-ci-cd -p 8080:8080 mhmmdrizki/alta-ci-cd:latest
         # run: |
         #   ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'bash -s' < deploy.sh
