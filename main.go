@@ -1,15 +1,18 @@
 package main
 
 import (
-	"net/http"
+	"ci_cd/database"
+	"ci_cd/routes"
 
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
+	database.InitDB()
+
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello Alterra Academy! Welcome Back!")
-	})
+
+	routes.InitRoutes(e)
+
 	e.Logger.Fatal(e.Start(":8080"))
 }
